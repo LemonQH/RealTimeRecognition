@@ -6,26 +6,17 @@ import json
 import tkinter as tk
 from tkinter import filedialog,messagebox,ttk
 
-app_key = '75fbed84cfaXXXXX'
-app_secret = '3XXXXXXXXXXXX'
 
 
-
+app_key = '75fbed84cfac08b4'
+app_secret = 'XXXXXXXXXXXXXXXXXXXXXXXXX'
+result_arr=[]
 class file():
     def __init__(self,path):
         self.path=path
-        root1 = tk.Tk()
-        root1.title("netease youdao translation test")
-        frm = tk.Frame(root1)
-        frm.grid(padx='80', pady='80')
-
-        labelresult = tk.Label(frm, text='翻译结果：')
-        labelresult.grid(row=0, column=0)
-        text_result = tk.Text(frm, width='40', height='20')
-        text_result.grid(row=2, column=1)
-
 
 def recognise(filepath,language_type):
+    print('l:'+language_type)
     global file_path
     file_path=filepath
     nonce = str(uuid.uuid1())
@@ -46,28 +37,28 @@ def encrypt(signStr):
     return hash.hexdigest()
 
 
-
+def print_resule(arr):
+    text_result.delete('1.0',tk.END)
+    for n in arr:
+        text_result.insert("insert", n + '\n')
+#接收socket消息并处理
 def on_message(ws, message):
-    # print('=========message=====:'+message)
     result=json.loads(message)
-    # result=json.loads(str(message, encoding="utf-8"))
-
-    # print(resultmessage)
-    try:
+    resultmessage= result['result']
+    if resultmessage:
         resultmessage1 = result['result'][0]
         resultmessage2 = resultmessage1["st"]['sentence']
         print(resultmessage2)
-    except Exception as e:
-        print('')
-
-
+        #text_result.insert(tk.END, resultmessage2+'\n')
+        result_arr.append(resultmessage2)
 
 
 def on_error(ws, error):
     print(error)
 
-
+#结束socket会话后，打印结果
 def on_close(ws):
+    print_resule(result_arr)
     print("### closed ###")
 
 
@@ -97,3 +88,13 @@ def start(uri,step):
 
     ws.on_open = on_open
     ws.run_forever()
+    root.mainloop()
+
+
+#输出结果的对话框
+root = tk.Tk()
+root.title("result")
+frm = tk.Frame(root)
+frm.grid(padx='80', pady='80')
+text_result = tk.Text(frm, width='40', height='20')
+text_result.grid(row=0, column=1)

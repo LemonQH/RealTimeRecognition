@@ -2,31 +2,27 @@ import tkinter as tk
 from tkinter import filedialog,messagebox,ttk
 from audioandprocess import Audio_model
 
-au_model=Audio_model("","中文",False)
+au_model=Audio_model("","",False)
 lang_type_dict=("中文","英语","日语","韩语")
-language_dict = {'中文': 'zh-CHS', '英语': 'en','日语':'ja','韩语':'ko'}
 
 def get_lang_type(*args):
     select=combox.get()
-    au_model.language_type=select
-    print(lang_type_dict.index(select))
-    print(select)
-    au_model.language = language_dict[au_model.language_type]
+    au_model.language_type=lang_type_dict.index(select)
+    print(au_model.language_type)
 
-
-# def set_result_path():
-#     result_path=filedialog.askdirectory()
-#     au_model.audio_path=result_path
-#     text1.insert(tk.END,result_path)
+def set_result_path():
+    result_path=filedialog.askdirectory()
+    au_model.audio_path=result_path
+    text1.insert(tk.END,result_path)
 
 def start_rec():
-    lb_Status['text']='Working...'
+    lb_Status['text']='正在录音...'
     au_model.record_and_save()
 
 def get_result():
     lb_Status['text']='Ready'
     sr_result=au_model.stop_and_recognise()
-    tk.messagebox.showinfo("识别结果", sr_result)
+
 
 
 root=tk.Tk()
@@ -51,7 +47,7 @@ combox.grid(row=0,column=1)
 btn_start_rec = tk.Button(frm, text='开始录音', command=start_rec)
 btn_start_rec.grid(row=2, column=0)
 
-lb_Status = tk.Label(frm, text='Ready', anchor='w', fg='green')
+lb_Status = tk.Label(frm, text='准备录音', anchor='w', fg='green')
 lb_Status.grid(row=2,column=1)
 
 btn_sure=tk.Button(frm,text="结束并识别",command=get_result)

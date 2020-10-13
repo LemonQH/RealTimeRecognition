@@ -4,7 +4,7 @@ import wave
 
 from recobynetease import *
 
-language_dict = {'中文': 'zh-CHS', '英语': 'en','日语':'ja','韩语':'ko'}
+#language_dict = {'中文': 'zh-CHS', '英语': 'en'}
 
 
 class Audio_model():
@@ -13,9 +13,9 @@ class Audio_model():
         self.audio_path = audio_path,
         self.audio_file_name=''
         self.language_type = language_type,
-        # self.language_dict=["zh-CHS","en","ja","ko"]
-        self.language=language_dict[language_type]
-        print(language_dict[language_type])
+        self.language_dict=["zh-CHS","en","ja","ko"]
+        self.language=''
+        #print(language_dict[language_type])
         self.is_recording=is_recording
         self.audio_chunk_size=1600
         self.audio_channels=1
@@ -25,7 +25,7 @@ class Audio_model():
     def record_and_save(self):
         self.is_recording = True
         # self.audio_file_name=self.audio_path+'/recordtmp.wav'
-        self.audio_file_name='/recordtmp.wav'
+        self.audio_file_name='./recordtmp.wav'
 
         threading.Thread(target=self.record,args=(self.audio_file_name,)).start()
 
@@ -55,9 +55,7 @@ class Audio_model():
 
     def stop_and_recognise(self):
         self.is_recording=False
-        recognise(self.audio_file_name,self.language)
-        recognise(self.audio_file_name,self.language)
+        recognise(self.audio_file_name,self.language_dict[self.language_type])
         #处理返回信息
 
-        return '123'
 
